@@ -3,7 +3,6 @@ import "dotenv/config";
 import * as ballotJson from "../../artifacts/contracts/Ballot.sol/Ballot.json";
 // eslint-disable-next-line node/no-missing-import
 import { Ballot } from "../../typechain";
-  
 
 // This key is already public on Herong's Tutorial Examples - v1.03, by Dr. Herong Yang
 // Do never expose your keys like this
@@ -26,6 +25,8 @@ async function main() {
   }
   if (process.argv.length < 3) throw new Error("Ballot address missing");
   const ballotAddress = process.argv[2];
+  if (process.argv.length < 4) throw new Error("Proposal Index missing");
+  const proposalIndex = process.argv[3];
   console.log(
     `Attaching ballot contract interface to address ${ballotAddress}`
   );
@@ -35,13 +36,9 @@ async function main() {
     signer
   ) as Ballot;
 
-  const proposals = await ballotContract.getProposals();
-  
-  for (let index = 0; index < proposals.length; index++) {
-    console.log(ethers.utils.parseBytes32String(proposals[index].name))
-    console.log(proposals[index].voteCount.toString())
-
-  }
+  const tx = await ballotContract.vote(proposalIndex);
+  await tx.wait();
+  console.log(`Transaction completed. Hash: ${tx.hash}`);
 
 }
 
