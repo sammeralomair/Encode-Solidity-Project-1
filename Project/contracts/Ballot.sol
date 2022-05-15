@@ -44,6 +44,11 @@ contract Ballot {
         }
     }
 
+    // get length of proposal array
+    function getProposals() public view returns(Proposal[] memory proposalsArr) {
+        proposalsArr = proposals;
+    }
+
     // Give `voter` the right to vote on this ballot.
     // May only be called by `chairperson`.
     function giveRightToVote(address voter) external {
