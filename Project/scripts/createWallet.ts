@@ -1,9 +1,11 @@
 import { ethers } from "ethers";
 import "dotenv/config";
-import * as ballotJson from "../../artifacts/contracts/Ballot.sol/Ballot.json";
-import { SigningKey } from "ethers/lib/utils";
 
-
+/** 
+ * > createWallet
+ * 
+ * Create a wallet and output the mnemoic phrase and private key.
+ */
 async function main() {
     const newWallet = ethers.Wallet.createRandom();
     console.log(newWallet);

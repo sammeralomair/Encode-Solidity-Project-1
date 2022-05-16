@@ -44,7 +44,7 @@ contract Ballot {
         }
     }
 
-    // get length of proposal array
+    // get proposal array
     function getProposals() public view returns(Proposal[] memory proposalsArr) {
         proposalsArr = proposals;
     }

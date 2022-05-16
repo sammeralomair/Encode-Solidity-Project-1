@@ -1,13 +1,14 @@
 import { Contract, ethers } from "ethers";
+import "dotenv/config";
 import * as ballotJson from "../../artifacts/contracts/Ballot.sol/Ballot.json";
 // eslint-disable-next-line node/no-missing-import
 import { Ballot } from "../../typechain";
 import { connectToWallet } from "../utils";
   
 /**
- * > queryProposals <ballotContractAddress>
+ * > queryWinningProposal <ballotContractAddress>
  * 
- * Outputs proposals and vote count
+ * Displays the current winning proposal and the number of votes.
  */
 async function main() {
   // Get inputs
@@ -23,18 +24,17 @@ async function main() {
     ballotJson.abi,
     signer
   ) as Ballot;
-
-  // Query proposals
-  const proposals = await ballotContract.getProposals();
   
-  console.log();
-  console.log(`-----------------------------------`);
-  console.log(`index) proposal_name proposal_votes`);
-  console.log(`-----------------------------------`);
-  console.log();
-  for (let index = 0; index < proposals.length; index++) {
-    console.log(`${index}) ${ethers.utils.parseBytes32String(proposals[index].name)} ${proposals[index].voteCount.toString()}`)
-  }
+  // Get winning proposal
+  const proposals = await ballotContract.getProposals();
+  const winningIdx = await ballotContract.winningProposal();
+  const winningProposal = proposals[winningIdx.toNumber()];
+
+  const winnningVoteCount = winningProposal.voteCount.toString();
+  const winnningVoteName = ethers.utils.parseBytes32String(winningProposal.name);
+
+  console.log(`Proposal ${winnningVoteName} is winning with ${winnningVoteCount} votes`);
+
 }
 
 main().catch((error) => {
